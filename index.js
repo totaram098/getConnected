@@ -13,10 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+console.log(process.env.MYSQLDATABASE);
 const { insertData, deleteData, updateData, selectData } = userController;
 
 app.get("/", (req, res) => {
-  res.send("Welcome to booking app!" + process.env.MYSQLPASSWORD);
+  res.send("Welcome to booking app!");
 });
 
 app.post("/insert", insertData);
