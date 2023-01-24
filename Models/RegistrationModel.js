@@ -23,7 +23,7 @@ RegistrationModel.init(
       unique: true,
     },
     phoneNumber: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     email: {

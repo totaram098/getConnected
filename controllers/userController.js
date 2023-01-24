@@ -15,7 +15,7 @@ const insertData = async (req, res) => {
     res.status(200).json(insert);
   } catch (e) {
     let message = e.errors[0]["message"];
-    res.status(200).json({ Message: message });
+    res.status(200).json({ message });
   }
 };
 
@@ -61,7 +61,7 @@ const login = async (req, resp) => {
   try {
     if (!req.cookies.jwt_token) {
       const user = req.body;
-      Userpassword = await bcrypt.hash(user.password, 10);
+     const Userpassword = await bcrypt.hash(user.password, 10);
       let result = await RegistrationModel.findOne({
         where: {
           email: user.email,

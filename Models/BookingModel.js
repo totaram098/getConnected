@@ -51,10 +51,10 @@ BookingModel.init(
       type: DataTypes.TIME,
     },
     durationFrom: {
-      type: DataTypes.DATE,
+      type: DataTypes.TIME,
     },
     durationTo: {
-      type: DataTypes.DATE,
+      type: DataTypes.TIME,
     },
     meetingLocation: {
       type: DataTypes.TEXT,

@@ -16,7 +16,7 @@ app.use(cookieParser());
 const { insertData, deleteData, updateData, selectData } = userController;
 
 app.get("/", (req, res) => {
-  res.send("Welcome to booking app!");
+  res.send("Welcome to booking app!" + process.env.MYSQLPASSWORD);
 });
 
 app.post("/insert", insertData);
@@ -24,8 +24,8 @@ app.delete("/delete", deleteData);
 app.put("/update", updateData);
 app.get("/select", selectData);
 
-app.get("/profile", auth.tokenVerify, (req, resp) => {
-  resp.status(202).json({ message: "Verified Now" });
+app.get("/profile", auth.tokenVerify, (req, res) => {
+  res.status(202).json({ message: "Verified Now" });
 });
 
 app.post("/booking", BookingController.insertBooking);
