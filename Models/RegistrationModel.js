@@ -34,8 +34,9 @@ RegistrationModel.init(
       },
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
+      length: 100,
     },
     created_at: {
       type: DataTypes.DATE,

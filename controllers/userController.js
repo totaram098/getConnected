@@ -5,17 +5,23 @@ const sequelize = config.sequelizeTZ;
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-//insert
-const insertData = async (req, res) => {
+const register = async (req, res) => {
   try {
-    const data = req.body;
-    data.password = await bcrypt.hash(data.password, 10);
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+      res.status(200).json({ message: "No registration data recieved!" });
+      return;
+    }
+
+    let data = req.body;
+    data.password = await bcrypt.hash(data.password, 3);
+
     await sequelize.sync({ force: false });
-    let insert = await RegistrationModel.create(data);
-    res.status(200).json(insert);
+    let user = await RegistrationModel.create(data);
+    res.status(200).json(user);
   } catch (e) {
-    let message = e.errors[0]["message"];
-    res.status(200).json({ message });
+    console.log(e);
+    // let message = e.errors[0]["message"];
+    res.status(200).json({ message: "error" });
   }
 };
 
@@ -61,7 +67,7 @@ const login = async (req, resp) => {
   try {
     if (!req.cookies.jwt_token) {
       const user = req.body;
-     const Userpassword = await bcrypt.hash(user.password, 10);
+      const Userpassword = await bcrypt.hash(user.password, 10);
       let result = await RegistrationModel.findOne({
         where: {
           email: user.email,
@@ -93,7 +99,7 @@ const login = async (req, resp) => {
   }
 };
 module.exports = {
-  insertData,
+  register,
   deleteData,
   updateData,
   selectData,
