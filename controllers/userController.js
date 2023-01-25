@@ -1,7 +1,7 @@
-const RegistrationModel = require("../Models/RegistrationModel");
-const config = require("../config/config");
-const bcrypt = require("bcryptjs");
-const sequelize = config.sequelizeTZ;
+const User = require("../Models/User");
+
+const bcrypt = require("bcrypt");
+
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
@@ -13,15 +13,25 @@ const register = async (req, res) => {
     }
 
     let data = req.body;
-    data.password = await bcrypt.hash(data.password, 3);
+    data.password = await bcrypt.hash(data.password, 8);
 
-    await sequelize.sync({ force: false });
-    let user = await RegistrationModel.create(data);
-    res.status(200).json(user);
+    User.findOne({ where: { email: data.email } })
+      .then(async (result) => {
+        if (result) {
+          res.status(200).json({ message: "User already exists" });
+        } else {
+          await User.sync({ force: false });
+          console.log(data);
+          const userRegistered = await User.create(data);
+          res.status(200).json({ message: userRegistered });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(200).json({ message: err });
+      });
   } catch (e) {
-    console.log(e);
-    // let message = e.errors[0]["message"];
-    res.status(200).json({ message: "error" });
+    res.status(200).json({ message: "An error occured!" });
   }
 };
 
@@ -55,7 +65,7 @@ const selectData = async (req, res) => {
 const deleteData = async (req, res) => {
   const data = req.body;
   try {
-    let result = await RegistrationModel.destroy({
+    let result = await User.destroy({
       where: data,
     });
     res.status(200).json(result);
@@ -68,7 +78,7 @@ const login = async (req, resp) => {
     if (!req.cookies.jwt_token) {
       const user = req.body;
       const Userpassword = await bcrypt.hash(user.password, 10);
-      let result = await RegistrationModel.findOne({
+      let result = await User.findOne({
         where: {
           email: user.email,
           password: Userpassword,

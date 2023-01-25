@@ -1,4 +1,4 @@
-const BookingModel = require("../Models/BookingModel");
+const BookingModel = require("../Models/Booking");
 const config = require("../config/config");
 const sequelize = config.sequelizeTZ;
 //insert

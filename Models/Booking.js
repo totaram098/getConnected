@@ -1,10 +1,8 @@
-const config = require("../config/config");
-const DataTypes = config.DataTypes;
-const Model = config.Sequelize.Model;
-const sequelize = config.sequelizeTZ;
+const sequelize = require("../config/config");
+const { DataTypes } = require("sequelize");
 
-class BookingModel extends Model {}
-BookingModel.init(
+const Booking = sequelize.define(
+  "bookings",
   {
     bookingId: {
       type: DataTypes.INTEGER,
@@ -79,9 +77,9 @@ BookingModel.init(
   },
   {
     sequelize,
-    modelName: "booking",
+    modelName: "bookings",
     timestamps: false,
   }
 );
 
-module.exports = BookingModel;
+module.exports = Booking;

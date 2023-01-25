@@ -1,11 +1,8 @@
-const config = require("../config/config");
-const DataTypes = config.DataTypes;
-const Model = config.Sequelize.Model;
-const sequelize = config.sequelizeTZ;
+const sequelize = require("../config/config");
+const { DataTypes } = require("sequelize");
 
-class RegistrationModel extends Model {}
-
-RegistrationModel.init(
+const User = sequelize.define(
+  "users",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -15,12 +12,10 @@ RegistrationModel.init(
     fname: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     lname: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     phoneNumber: {
       type: DataTypes.STRING,
@@ -29,29 +24,25 @@ RegistrationModel.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      validator: {
-        isEmail: true,
-      },
     },
     password: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(300),
       allowNull: false,
-      length: 100,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
     },
   },
   {
     sequelize,
-    modelName: "registration",
-    timestamps: false,
+
+    tableName: "users",
   }
 );
 
-module.exports = RegistrationModel;
+module.exports = User;

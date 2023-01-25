@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 require("dotenv").config();
 
-const sequelizeTZ = new Sequelize(
+const sequelize = new Sequelize(
   process.env.MYSQLDATABASE,
   process.env.MYSQLUSER,
   process.env.MYSQLPASSWORD,
@@ -13,7 +13,7 @@ const sequelizeTZ = new Sequelize(
   }
 );
 
-sequelizeTZ
+sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
@@ -22,10 +22,4 @@ sequelizeTZ
     console.error("Unable to connect to the database:", err);
   });
 
-const connection = {};
-connection.Sequelize = Sequelize;
-connection.sequelizeTZ = sequelizeTZ;
-connection.Model = Model;
-connection.DataTypes = DataTypes;
-
-module.exports = connection;
+module.exports = sequelize;
