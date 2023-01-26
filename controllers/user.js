@@ -1,4 +1,4 @@
-const User = require("../Models/User");
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -34,7 +34,7 @@ const register = async (req, res) => {
 
 const get = async (req, res) => {
   try {
-    let result = await RegistrationModel.findAll();
+    let result = await User.findAll();
     res.status(200).json(result);
   } catch (e) {
     res.status(200).json(e);
