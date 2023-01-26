@@ -16,7 +16,7 @@ const register = async (req, res) => {
     User.findOne({ where: { email: data.email } })
       .then(async (result) => {
         if (result) {
-          res.status(200).json({ message: "User already exists" });
+          res.status(200).json({ message: "User already exists!" });
         } else {
           await User.sync({ force: false });
           const userRegistered = await User.create(data);

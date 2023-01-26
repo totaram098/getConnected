@@ -78,7 +78,6 @@ const Booking = sequelize.define(
   {
     sequelize,
     modelName: "bookings",
-    timestamps: false,
   }
 );
 
