@@ -68,15 +68,11 @@ const login = async (req, res) => {
     const token = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET, {
       expiresIn: "5h",
     });
-    console.log(req.body);
-    // res.cookie("jwt_token", token, { httpOnly: true });
-    // res.cookie("cookieName", token, { maxAge: 900000, httpOnly: true });
-    res.cookie("cookieName", "cookieValue");
 
+    res.cookie("jwt_token", token, { httpOnly: true });
     res.status(200).json({ user: userDetails });
-    res.send();
   } catch (e) {
-    res.status(402).json(e);
+    res.status(400).json(e);
   }
 };
 
