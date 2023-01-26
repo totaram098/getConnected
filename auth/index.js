@@ -1,10 +1,5 @@
-const express = require("express");
-require("dotenv").config();
-
 const jwt = require("jsonwebtoken");
-
-const app = express();
-app.use(express.json());
+require("dotenv").config();
 
 const tokenVerify = (req, res, next) => {
   if (!req.cookies.jwt_token) {
@@ -17,7 +12,6 @@ const tokenVerify = (req, res, next) => {
   }
 
   try {
-    const coded = jwt.verify(token, process.env.JWT_SECRET);
     if (jwt.verify(token, process.env.JWT_SECRET)) {
       next();
     } else {

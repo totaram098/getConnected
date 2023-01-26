@@ -1,4 +1,4 @@
-const sequelize = require("../config/config");
+const sequelize = require("../config/database");
 const { DataTypes } = require("sequelize");
 
 const User = sequelize.define(
@@ -26,7 +26,7 @@ const User = sequelize.define(
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(300),
+      type: DataTypes.STRING(70),
       allowNull: false,
     },
     createdAt: {
@@ -40,7 +40,6 @@ const User = sequelize.define(
   },
   {
     sequelize,
-
     tableName: "users",
   }
 );

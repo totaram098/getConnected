@@ -1,40 +1,43 @@
 const express = require("express");
-const config = require("./config/config");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const sequelizeTZ = config.sequelizeTZ;
-const auth = require("./auth/auth");
+const sequelize = require("./config/database");
 require("dotenv").config();
+const auth = require("./auth");
 const bodyParser = require("body-parser");
 
-const port = process.env.PORT || 3001;
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
+const port = process.env.PORT || 3001;
 app.use(cors());
+
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// controllers
+// Connecting to database
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
-const userController = require("./controllers/userController");
-const BookingController = require("./controllers/BookingController");
-
-const { register, deleteData, updateData, selectData } = userController;
+(async () => {
+  await sequelize.sync({ alter: true });
+})();
 
 app.get("/", (req, res) => {
   res.send("Welcome to booking app!");
 });
 
-app.post("/register", register);
-app.delete("/delete", deleteData);
-app.put("/update", updateData);
-app.get("/select", selectData);
+// User routes
+app.use("/users", require("./routes/User"));
 
 app.get("/profile", auth.tokenVerify, (req, res) => {
   res.status(202).json({ message: "Verified Now" });
 });
-
-app.post("/booking", BookingController.insertBooking);
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
