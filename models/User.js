@@ -29,6 +29,10 @@ const User = sequelize.define(
       type: DataTypes.STRING(70),
       allowNull: false,
     },
+    token: {
+      type: DataTypes.STRING(250),
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: new Date(),

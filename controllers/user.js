@@ -47,6 +47,7 @@ const login = async (req, res) => {
       res.status(202).json({ message: "Already logged in" });
       return;
     }
+
     const userDetails = await User.findOne({
       where: {
         email: req.body.email,
@@ -56,6 +57,7 @@ const login = async (req, res) => {
       res.status(404).json({ message: "User does not exist" });
       return;
     }
+
     const correctPassword = await bcrypt.compare(
       req.body.password,
       userDetails.password
@@ -65,14 +67,26 @@ const login = async (req, res) => {
       return;
     }
 
-    const token = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET, {
-      expiresIn: "5h",
+    const token = await generateToken(req.body.email);
+
+    res.cookie("jwt_token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 150000),
     });
 
-    res.cookie("jwt_token", token, { httpOnly: true });
     res.status(200).json({ user: userDetails });
   } catch (e) {
     res.status(400).json(e);
+  }
+};
+
+const generateToken = async (email) => {
+  try {
+    return await jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "5h",
+    });
+  } catch (error) {
+    throw error;
   }
 };
 
