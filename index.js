@@ -40,10 +40,6 @@ app.get("/", (req, res) => {
 // User routes
 app.use("/users", require("./routes/User"));
 
-app.get("/profile", auth.tokenVerify, (req, res) => {
-  res.status(202).json({ message: "Verified Now" });
-});
-
 app.listen(port, () => {
   console.log("Server is running on port " + port);
 });
