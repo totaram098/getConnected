@@ -6,7 +6,6 @@ const tokenVerify = async (req, res, next) => {
     res.status(401).json({ message: "Not Authorized" });
     return;
   }
-
   const token = req.cookies.jwt_token;
 
   if (!token) {

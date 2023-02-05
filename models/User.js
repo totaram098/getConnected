@@ -26,11 +26,11 @@ const User = sequelize.define(
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(70),
+      type: DataTypes.STRING(170),
       allowNull: false,
     },
-    token: {
-      type: DataTypes.STRING(250),
+    role: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     createdAt: {

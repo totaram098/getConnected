@@ -3,11 +3,19 @@ const { tokenVerify } = require("../auth");
 const router = express.Router();
 
 // user controllers
-const { get, register, login } = require("../controllers/user");
+const {
+  userLoggedIn,
+  register,
+  login,
+  logout,
+  profile,
+} = require("../controllers/user");
 
 router.post("/register", register);
 router.post("/login", login);
-router.get("/get", tokenVerify, get);
-router.get("/",tokenVerify, get);
+router.post("/profile",tokenVerify, profile)
+router.get("/userLoggedIn", tokenVerify, userLoggedIn);
+router.get("/logout", tokenVerify, logout);
+
 
 module.exports = router;
