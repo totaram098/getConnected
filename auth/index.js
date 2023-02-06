@@ -29,6 +29,14 @@ const tokenVerify = async (req, res, next) => {
   }
 };
 
+const localVariables = (req, res, next) => {
+  req.app.locals = {
+    OTP: null,
+  };
+  next();
+};
+
 module.exports = {
   tokenVerify,
+  localVariables,
 };

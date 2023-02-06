@@ -1,5 +1,5 @@
 const express = require("express");
-const { tokenVerify } = require("../auth");
+const { tokenVerify, localVariables } = require("../auth");
 const router = express.Router();
 
 // user controllers
@@ -9,13 +9,16 @@ const {
   login,
   logout,
   profile,
+  generateOTP,
+  verifyOTP,
 } = require("../controllers/user");
 
 router.post("/register", register);
 router.post("/login", login);
-router.post("/profile",tokenVerify, profile)
+router.post("/profile", tokenVerify, profile);
+router.get("/generateOTP", tokenVerify, localVariables, generateOTP);
+router.get("/verifyOTP", tokenVerify, verifyOTP);
 router.get("/userLoggedIn", tokenVerify, userLoggedIn);
 router.get("/logout", tokenVerify, logout);
-
 
 module.exports = router;
