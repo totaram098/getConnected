@@ -11,11 +11,15 @@ const {
   profile,
   generateOTP,
   verifyOTP,
+  resetPassword,
+  createResetSession,
 } = require("../controllers/user");
 
 router.post("/register", register);
 router.post("/login", login);
 router.post("/profile", tokenVerify, profile);
+router.post("/resetPassword", tokenVerify, resetPassword);
+router.get("/createResetSession", tokenVerify, createResetSession);
 router.get("/generateOTP", tokenVerify, localVariables, generateOTP);
 router.get("/verifyOTP", tokenVerify, verifyOTP);
 router.get("/userLoggedIn", tokenVerify, userLoggedIn);

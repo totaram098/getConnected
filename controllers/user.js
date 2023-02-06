@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
 const jwt = require("jsonwebtoken");
+const { sendEmail } = require("./mailer");
 require("dotenv").config();
 
 const register = async (req, res) => {
@@ -88,7 +89,7 @@ const login = async (req, res) => {
 
     res.cookie("jwt_token", token, {
       httpOnly: true,
-      maxAge: 190000,
+      maxAge: 590000,
     });
 
     userDetails = {
@@ -165,15 +166,46 @@ const generateToken = async (email) => {
   }
 };
 
-const generateOTP = (req, res) => {
+const generateOTP = async (req, res) => {
   try {
+    if (!req.body.email) {
+      return res.status(400).json({ message: "Please provide email also!" });
+    }
+
     req.app.locals.OTP = otpGenerator.generate(4, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-
-    res.status(201).json({ otp: req.app.locals.OTP });
+    const emailHTML = `
+      <h3>OTP</h3>
+      <p>Please use this OTP to change your password on http://localhost:3000/verifyOTP </p>
+      <code>${req.app.locals.OTP}</code>
+    `;
+    const response = await sendEmail(
+      req.body.email,
+      "Password Recovery OTP",
+      "Use this OTP for verification",
+      emailHTML
+    );
+    if (
+      !response[0] ||
+      Object.keys(response[0]).length <= 0 ||
+      response[0].statusCode >= 300
+    ) {
+      res.status(500).json({
+        emailSent: false,
+        message:
+          "Unfortunately sending you OTP email failed this time, try again!",
+      });
+    }
+    response[0].statusCode >= 200 &&
+      response[0].statusCode <= 250 &&
+      res.status(201).json({
+        emailSent: true,
+        message: "OTP has been sent to your email!",
+        otp: req.app.locals.OTP,
+      });
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -184,11 +216,70 @@ const verifyOTP = (req, res) => {
     const { otp } = req.body;
     if (parseInt(req.app.locals.OTP) === parseInt(otp)) {
       req.app.locals.OTP = null;
+      req.app.locals.resetSession = true;
       return res
         .status(201)
         .json({ verified: true, message: "OTP verified successfully!" });
     }
     res.status(400).json({ verified: false, message: "Invalid OTP" });
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+const createResetSession = (req, res) => {
+  if (req.app.locals.resetSession) {
+    req.app.locals.resetSession = false; // allow access to this route only once
+    return res.status(200).json({ message: "access granted!" });
+  }
+  return res.status(400).json({ message: "session expired!" });
+};
+
+const resetPassword = async (req, res) => {
+  if (!req.app.locals.resetSession)
+    return res.status(200).json({ message: "session expired!" });
+
+  try {
+    User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    })
+      .then((user) => {
+        bcrypt
+          .hash(req.body.password, 8)
+          .then(async (hashedPassword) => {
+            const updatedUser = await User.update(
+              {
+                password: hashedPassword,
+              },
+              {
+                where: {
+                  email: user.email,
+                },
+              }
+            );
+            if (updatedUser[0] <= 0) {
+              return res
+                .status(400)
+                .json({ updated: false, message: "User did not update!" });
+            }
+            req.app.locals.resetSession = false;
+            return res.status(201).json({
+              updated: true,
+              message: "Your password has been changed now!",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+
+            res.status(404).json({ message: "User not found!" });
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(404).json({ message: "User not found!" });
+      });
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -202,4 +293,6 @@ module.exports = {
   userLoggedIn,
   generateOTP,
   verifyOTP,
+  resetPassword,
+  createResetSession,
 };

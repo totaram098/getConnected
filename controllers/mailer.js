@@ -5,7 +5,10 @@ const sendEmail = async (to, subject, text, html) => {
   try {
     const response = await sgMail.send({
       to,
-      from: process.env.MY_EMAIL,
+      from: {
+        name: "Kenduit Inc.",
+        email: process.env.MY_EMAIL,
+      },
       subject,
       text,
       html,
