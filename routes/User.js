@@ -18,10 +18,10 @@ const {
 router.post("/register", register);
 router.post("/login", login);
 router.post("/profile", tokenVerify, profile);
-router.post("/resetPassword", tokenVerify, resetPassword);
-router.get("/createResetSession", tokenVerify, createResetSession);
-router.get("/generateOTP", tokenVerify, localVariables, generateOTP);
-router.get("/verifyOTP", tokenVerify, verifyOTP);
+router.post("/resetPassword", resetPassword);
+router.get("/createResetSession", createResetSession);
+router.post("/generateOTP", localVariables, generateOTP);
+router.post("/verifyOTP", verifyOTP);
 router.get("/userLoggedIn", tokenVerify, userLoggedIn);
 router.get("/logout", tokenVerify, logout);
 

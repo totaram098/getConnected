@@ -8,7 +8,7 @@ require("dotenv").config();
 const register = async (req, res) => {
   try {
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-      res.status(200).json({ message: "No registration data recieved!" });
+      res.status(201).json({ message: "No registration data recieved!" });
       return;
     }
 
@@ -21,7 +21,7 @@ const register = async (req, res) => {
     })
       .then(async (result) => {
         if (result) {
-          res.status(200).json({ message: "User already exists!" });
+          res.status(201).json({ message: "User already exists!" });
         } else {
           await User.sync({ force: false });
           let userRegistered = null;
@@ -30,7 +30,7 @@ const register = async (req, res) => {
           } else {
             userRegistered = await User.create({ ...data, role: "user" });
           }
-          res.status(200).json({
+          res.status(201).json({
             message: "Registeration Successful",
             user: userRegistered,
           });
@@ -38,10 +38,10 @@ const register = async (req, res) => {
       })
       .catch((err) => {
         console.log(err);
-        res.status(200).json({ message: err });
+        res.status(201).json({ message: err });
       });
   } catch (e) {
-    res.status(200).json({ message: "An error occured!" });
+    res.status(201).json({ message: "An error occured!" });
   }
 };
 
@@ -103,7 +103,7 @@ const login = async (req, res) => {
       updatedAt: userDetails?.updatedAt,
     };
 
-    res.status(200).json({ message: "Login Successful", user: userDetails });
+    res.status(201).json({ message: "Login Successful", user: userDetails });
   } catch (e) {
     console.log(e);
     res.status(400).json({ message: e });
@@ -111,7 +111,7 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.status(200).clearCookie("jwt_token").json({ message: "Logged out!" });
+  res.status(201).clearCookie("jwt_token").json({ message: "Logged out!" });
 };
 
 const profile = async (req, res) => {
@@ -149,7 +149,7 @@ const profile = async (req, res) => {
       return;
     }
     res
-      .status(200)
+      .status(201)
       .json({ updated: true, message: "User has been updated successfully!" });
   } catch (e) {
     res.status(400).json(e);
@@ -194,15 +194,13 @@ const generateOTP = async (req, res) => {
       response[0].statusCode >= 300
     ) {
       res.status(500).json({
-        emailSent: false,
         message:
           "Unfortunately sending you OTP email failed this time, try again!",
       });
     }
-    response[0].statusCode >= 200 &&
+    response[0].statusCode >= 201 &&
       response[0].statusCode <= 250 &&
       res.status(201).json({
-        emailSent: true,
         message: "OTP has been sent to your email!",
         otp: req.app.locals.OTP,
       });
@@ -214,14 +212,14 @@ const generateOTP = async (req, res) => {
 const verifyOTP = (req, res) => {
   try {
     const { otp } = req.body;
+    console.log(otp);
+    console.log(req.app.locals.OTP);
     if (parseInt(req.app.locals.OTP) === parseInt(otp)) {
       req.app.locals.OTP = null;
       req.app.locals.resetSession = true;
-      return res
-        .status(201)
-        .json({ verified: true, message: "OTP verified successfully!" });
+      return res.status(201).json({ message: "OTP verified successfully!" });
     }
-    res.status(400).json({ verified: false, message: "Invalid OTP" });
+    res.status(400).json({ message: "Invalid OTP" });
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -229,15 +227,14 @@ const verifyOTP = (req, res) => {
 
 const createResetSession = (req, res) => {
   if (req.app.locals.resetSession) {
-    req.app.locals.resetSession = false; // allow access to this route only once
-    return res.status(200).json({ message: "access granted!" });
+    return res.status(201).json({ flag: req.app.locals.resetSession });
   }
   return res.status(400).json({ message: "session expired!" });
 };
 
 const resetPassword = async (req, res) => {
   if (!req.app.locals.resetSession)
-    return res.status(200).json({ message: "session expired!" });
+    return res.status(400).json({ message: "session expired!" });
 
   try {
     User.findOne({
@@ -260,24 +257,18 @@ const resetPassword = async (req, res) => {
               }
             );
             if (updatedUser[0] <= 0) {
-              return res
-                .status(400)
-                .json({ updated: false, message: "User did not update!" });
+              return res.status(400).json({ message: "User did not update!" });
             }
             req.app.locals.resetSession = false;
             return res.status(201).json({
-              updated: true,
               message: "Your password has been changed now!",
             });
           })
           .catch((error) => {
-            console.log(error);
-
-            res.status(404).json({ message: "User not found!" });
+            res.status(404).json({ message: "Internal error occured!" });
           });
       })
       .catch((error) => {
-        console.log(error);
         res.status(404).json({ message: "User not found!" });
       });
   } catch (error) {
