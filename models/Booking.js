@@ -1,4 +1,4 @@
-const sequelize = require("../config/config");
+const sequelize = require("../config/database");
 const { DataTypes } = require("sequelize");
 
 const Booking = sequelize.define(
@@ -37,10 +37,6 @@ const Booking = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    services: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     shootLocation: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -62,10 +58,6 @@ const Booking = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    additionalServices: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
@@ -78,6 +70,7 @@ const Booking = sequelize.define(
   {
     sequelize,
     modelName: "bookings",
+    timestamps: false,
   }
 );
 
