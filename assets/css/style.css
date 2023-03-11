@@ -1,0 +1,202 @@
+
+::-webkit-scrollbar {
+width: 4px;
+}
+#container {
+border: 2px solid rgb(29, 30, 31);
+position: relative;
+width: 400px; 
+margin: auto;
+}
+.btnContainer {
+display: flex;
+justify-content: end;
+align-items: center;
+padding: 5px 2px;
+margin: 0;
+background-color: rgb(18, 188, 245);
+}
+.replayContainer {
+border-top: 2px solid rgb(29, 30, 31);
+height: 30px;
+}
+.replayContainer input {
+border: none;
+outline: none;
+}
+h5 {
+
+    background-color: rgb(90, 195, 230);
+padding: 3px 8px;
+margin: 3px auto;
+border: 1px solid black;
+border-radius: 5px;
+}
+.optionBtn {
+    
+    width: 10%;
+align-self: center;
+font-weight: bold;
+padding: 5px;
+border-radius: 2px;
+cursor: pointer;
+width: 10%;
+text-align: end;
+padding-right: 10px;
+}
+.sideMenu {
+    border: 2px solid white;
+position: absolute;
+width: 300px;
+right: 0;
+background-color: rgb(212, 231, 250);
+display: none;
+transition-duration: 1s;
+transition-property: all;
+transition-timing-function: ease;
+}
+.sideMenu.active {
+display: block;
+height: 94.5%;
+overflow-y: scroll;
+}
+.friendProfile,.addUser,.friendRequest,.option{
+    background-color: rgb(90, 195, 230);
+cursor: pointer;
+display: flex;
+border: 1px solid white;
+align-items: center;
+margin: 2px auto;
+padding: 3px;
+text-align: center;
+}
+.option{
+    justify-content: center;
+}
+.friendProfile img {
+    margin: auto;
+width: 20%;
+border-radius: 50px;
+}
+.friendRequest img,.addUser img{
+    margin: auto;
+    width: 20%;
+    border-radius: 50px;
+}
+.friendRequest div,.addUser div{
+    width: 75%;
+}
+.friendProfile h4{
+    width: 75%;
+    }
+
+    #back{
+        display: none;
+        cursor: pointer;
+    }
+   .messageContainer{
+    margin: auto;
+    background-color: rgb(233, 66, 66);
+    position: absolute;
+    width: 60%;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1.2rem;
+    left: 20%;  
+    margin-top: 5px;
+    display: none;
+    z-index: 10;
+    border-radius: 3px;
+   } 
+   .messageAnim{
+    animation-name: message;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+    display: block;
+
+   }
+   @keyframes message {
+    from{
+        opacity: 0;
+        margin-top: -40px;
+    }
+    to{
+        opacity: 1;
+        margin-top: 5px;
+    }
+   }
+
+   .to{
+    width: 90%;
+    float: left;
+    display: flex; 
+    flex-direction: column
+   }
+   .to span:first-child{
+    font-size: 0.7rem; color: peru; margin-top: 5px
+   }
+   .from{
+    
+    width: 90%;
+    float: right;
+    display: flex; 
+    flex-direction: column
+
+   }
+   .from span:first-child{
+    font-size: 0.7rem; 
+    color: rgb(211, 18, 121);
+    margin-top: 5px
+   }
+   .friendRequest button,.addUser button{
+    background-color: cornflowerblue;
+    box-shadow: 2px 2px 2px black;
+    cursor: pointer;
+    padding: 4px 5px;
+    border: 1px solid white;
+    margin: auto 3px;
+    border-radius: 2px;
+    width: 40%;
+   }
+
+   #send{
+    cursor: pointer;
+   }
+   .userProfile{
+    display: flex;
+     width: 90%; 
+     align-items: center
+   }
+   .logout{
+    position: relative;
+    text-decoration: none;
+    font-size: 1.3rem;
+    align-content: center;
+    cursor: pointer;
+    color: black;
+    border: 1px solid black;
+    padding: 2px 5px;
+   }
+   .logout img{
+    width: 25px;
+    vertical-align: bottom;
+   }
+/* #totaram,
+#mahesh {
+width: 45%;
+max-height: 600px;
+overflow-y: scroll;
+background-color: cadetblue;
+padding: 5px;
+position: relative;
+}
+h2 {
+background-color: lightseagreen;
+padding: 3px;
+margin: 3px;
+overflow-wrap: break-word;
+border: 1px solid black;
+}
+h1 {
+text-align: center;
+} */

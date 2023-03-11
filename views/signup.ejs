@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/css/signup.css" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div id="container">
+      <h2>SIGN UP</h2>
+      <form action="/addUser" method="POST" enctype="multipart/form-data">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Username"
+          name="name"
+          required
+        />
+        <input
+          type="file"
+          class="form-control"
+          accept="image/*"
+          placeholder="Choose Your Profile Pic"
+          name="profile"
+          required
+          id="profile"
+        />
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Email"
+          required
+          name="email"
+        />
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Password"
+          autocomplete="off"
+          name="password"
+          required
+        />
+        <input type="submit" class="btn" value="signup" />
+      </form>
+    </div>
+    <script>
+      document.querySelector("form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const fileInput = document.getElementById("profile");
+        const file = fileInput.files[0];
+
+        const reader = new FileReader();
+
+        let params = {};
+        // reader.onload = function (event) {
+        //   const value = event.target.result;
+        //   data = { profile: value };
+        // };
+        // reader.readAsDataURL(file);
+        const values = document.querySelectorAll(".form-control");
+        values.forEach((element) => {
+          const name = element.getAttribute("name");
+          const value = element.value;
+
+          if (name != "profile") {
+            params = { ...params, ...{ [name]: value } };
+          } else if (name == "profile") {
+            reader.onload = function (event) {
+              const pic = event.target.result;
+              picName = "profile";
+              params = { ...params, ...{ [picName]: pic } };
+              try {
+                fetch("http://localhost:3000/addUser", {
+                  method: "POST",
+                  body: JSON.stringify(params),
+                  headers: { "Content-Type": "application/json" },
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data) {
+                      console.log(data);
+                    } else {
+                      console.log("no data");
+                    }
+                  });
+              } catch (error) {
+                console.log(error);
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
