@@ -51,6 +51,9 @@ app.get("/login", (req, resp) => {
     resp.render("login");
   }
 });
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/userLogin", userLogin);
 //logout
